@@ -349,11 +349,18 @@ update_logger() {
 }
 
 is_roblox_running() {
-    # Check if ANY of the target packages are running
+    # Check if ANY of the target packages are running using the advanced two-layer Python monitor
     for pkg in "${TARGET_PACKAGES[@]}"; do
-        local pid=$(su -c "pidof $pkg" 2>/dev/null)
-        if [[ -n "$pid" ]]; then
-            return 0 # True, at least one is running
+        # Call the Python script
+        local result=$(su -c "python $HOME/.termux_reconnector/advanced_monitor.py $pkg" 2>/dev/null)
+        
+        if echo "$result" | grep -q "STATUS:RUNNING"; then
+            return 0 # True, at least one is running properly
+        elif echo "$result" | grep -q "STATUS:CRASHED"; then
+            print_msg "\e[31m[!] Advanced Monitor: Roblox crashed state detected.\e[0m"
+            # It's technically "running" in process list but in a crashed state, we return 1 (Not properly running)
+            # so the script handles it as a drop and forces a restart.
+            return 1 
         fi
     done
     return 1 # False, none are running
@@ -1085,6 +1092,11 @@ show_menu() {
 # --- Main Control Flow ---
 
 check_root
+
+# Ensure the advanced monitor script is in the right place
+mkdir -p "$HOME/.termux_reconnector"
+cp "$(dirname "$0")/advanced_monitor.py" "$HOME/.termux_reconnector/advanced_monitor.py"
+
 load_hwid
 verify_platoboost_key
 # The Platoboost function might recurse if key is invalid, so once returned we save
