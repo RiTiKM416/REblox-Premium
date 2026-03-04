@@ -63,9 +63,8 @@ echo ""
 # --- Download Main Application ---
 echo "Downloading core GUI script..."
 
-# Premium Build - Downloading from the Private REblox-Premium repository using the PAT
-GITHUB_TOKEN="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"
-curl -H "Authorization: token $GITHUB_TOKEN" -sL "https://raw.githubusercontent.com/RiTiKM416/REblox-Premium/main/gui_reconnector.sh" -o "$PREFIX/bin/roblox-reconnector" &
+# Premium Build - Downloading from the Public REblox-Premium repository
+curl -sL "https://raw.githubusercontent.com/RiTiKM416/REblox-Premium/main/gui_reconnector.sh" -o "$PREFIX/bin/roblox-reconnector" &
 CURL_PID=$!
 
 spin='-\|/'
