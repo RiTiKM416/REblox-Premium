@@ -312,6 +312,11 @@ launch_game() {
         RETRY_COUNT=0
         START_TIME=$(date +%s)
         LAST_LAUNCH_TIME=$(date +%s)
+        
+        # Send Startup Notification to Webhook
+        if [[ -n "$TARGET_WEBHOOK" ]]; then
+            trigger_webhook "🚀 REblox Started Monitoring!" &
+        fi
     else
         IS_RUNNING=0
         if [[ -z "$RETRY_COUNT" ]]; then RETRY_COUNT=0; fi
@@ -376,6 +381,7 @@ save_config() {
 
 # --- Webhook Logger ---
 trigger_webhook() {
+    local custom_title="${1:-Status Report: active}"
     if [[ -z "$TARGET_WEBHOOK" ]]; then return; fi
     
     local img_path="/sdcard/termux_monitor_snap.png"
@@ -401,15 +407,15 @@ trigger_webhook() {
 {
   "embeds": [
     {
-      "title": "Status Report: active",
+      "title": "$custom_title",
       "color": 3922152,
       "fields": [
-        { "name": "ðŸ’» HWID", "value": "\`$DEVICE_ID\`", "inline": true },
-        { "name": "â± Script Uptime", "value": "\`${script_hours}h ${script_mins}m\`", "inline": true },
-        { "name": "ðŸ”‹ Device Uptime", "value": "\`${device_uptime}\`", "inline": true },
-        { "name": "ðŸ’¥ Crashes Recovered", "value": "\`$TOTAL_CRASHES\`", "inline": true },
-        { "name": "ðŸ§© Google Sign-Ins", "value": "\`$TOTAL_GOOGLE_POPUPS\`", "inline": true },
-        { "name": "ðŸ“Š Device RAM", "value": "\`${mem_used}MB / ${mem_total}MB\`", "inline": true }
+        { "name": "💻 HWID", "value": "\`$DEVICE_ID\`", "inline": true },
+        { "name": "⌛ Script Uptime", "value": "\`${script_hours}h ${script_mins}m\`", "inline": true },
+        { "name": "🔋 Device Uptime", "value": "\`${device_uptime}\`", "inline": true },
+        { "name": "💥 Crashes Recovered", "value": "\`$TOTAL_CRASHES\`", "inline": true },
+        { "name": "🧩 Google Sign-Ins", "value": "\`$TOTAL_GOOGLE_POPUPS\`", "inline": true },
+        { "name": "📊 Device RAM", "value": "\`${mem_used}MB / ${mem_total}MB\`", "inline": true }
       ],
       "footer": { "text": "REblox Analytics" }
     }
@@ -1072,6 +1078,11 @@ while true; do
                     print_msg "\e[31mGame disconnected or closed. Reconnecting...\e[0m"
                     IS_RUNNING=0
                     TOTAL_CRASHES=$((TOTAL_CRASHES + 1))
+                    
+                    # Send Crash Notification to Webhook
+                    if [[ -n "$TARGET_WEBHOOK" ]]; then
+                        trigger_webhook "🔄 REblox Reconnecting (Crash Detected)" &
+                    fi
                 fi
                 launch_game
                 continue
@@ -1083,7 +1094,7 @@ while true; do
                 # 600 Seconds = 10 Minutes
                 if [[ $((w_timestamp - LAST_WEBHOOK_TIME)) -ge 600 ]]; then
                     print_msg "\e[36m[Logger] Taking 10-Minute Snapshot and posting to Discord...\e[0m"
-                    trigger_webhook & # Executed asynchronously so UI doesn't hang
+                    trigger_webhook "Status Report: active" & # Executed asynchronously
                     LAST_WEBHOOK_TIME=$w_timestamp
                 fi
             fi
