@@ -76,15 +76,20 @@ while kill -0 $CURL_PID 2>/dev/null; do
     sleep 0.1
 done
 
-printf "\r\e[32m[âœ“] Download complete!       \e[0m\n"
+printf "\r\e[32m[✓] Download complete!       \e[0m\n"
 chmod +x "$PREFIX/bin/roblox-reconnector"
+
+# CRITICAL FIX: Inject 'exec < /dev/tty' into the downloaded script if not present.
+# When running via 'curl | bash', stdin is the pipe (not the keyboard).
+# This ensures ALL 'read' commands inside the app read from the real terminal.
+if ! grep -q 'exec < /dev/tty' "$PREFIX/bin/roblox-reconnector" 2>/dev/null; then
+    sed -i '1a\\nexec < /dev/tty' "$PREFIX/bin/roblox-reconnector"
+fi
 
 echo ""
 echo "Installation complete!"
 echo "Starting the application..."
 echo ""
 
-# Execute the downloaded GUI - reconnect stdin to the real terminal (/dev/tty)
-# This is critical because `curl | bash` consumes stdin via the pipe,
-# so without this, all `read` commands would get empty input.
-exec "$PREFIX/bin/roblox-reconnector" < /dev/tty
+# Launch in a fresh bash process with stdin explicitly from the terminal
+bash "$PREFIX/bin/roblox-reconnector" < /dev/tty
