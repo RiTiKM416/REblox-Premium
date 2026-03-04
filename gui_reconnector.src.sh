@@ -3,6 +3,9 @@
 # REblox (Termux) Core Logic [V2 GUI]
 # This script runs locally on the device AFTER installation.
 
+# Fix stdin when launched via 'curl | bash' pipe - reconnect to real terminal
+exec < /dev/tty
+
 # --- Configuration & State Variables ---
 CONFIG_DIR="$HOME/.termux_reconnector/configs"
 CURRENT_CONFIG=""
