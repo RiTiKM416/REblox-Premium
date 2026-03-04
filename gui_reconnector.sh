@@ -53,9 +53,9 @@ fi
 
 box() {
   local s="${1}" w=${2:-60}
-  printf "%s\n" "${MAG}┌$(printf '─%.0s' $(seq 1 $((w-2))))┐${NORMAL}"
-  printf "%s\n" "${MAG}│${NORMAL} $(printf '%-'$((w-4))'s' "$s") ${MAG}│${NORMAL}"
-  printf "%s\n" "${MAG}└$(printf '─%.0s' $(seq 1 $((w-2))))┘${NORMAL}"
+  printf "%s\n" "${MAG}â”Œ$(printf 'â”€%.0s' $(seq 1 $((w-2))))â”${NORMAL}"
+  printf "%s\n" "${MAG}â”‚${NORMAL} $(printf '%-'$((w-4))'s' "$s") ${MAG}â”‚${NORMAL}"
+  printf "%s\n" "${MAG}â””$(printf 'â”€%.0s' $(seq 1 $((w-2))))â”˜${NORMAL}"
 }
 
 show_active_monitor() {
@@ -401,12 +401,12 @@ trigger_webhook() {
       "title": "Status Report: active",
       "color": 3922152,
       "fields": [
-        { "name": "💻 HWID", "value": "\`$DEVICE_ID\`", "inline": true },
-        { "name": "⏱ Script Uptime", "value": "\`${script_hours}h ${script_mins}m\`", "inline": true },
-        { "name": "🔋 Device Uptime", "value": "\`${device_uptime}\`", "inline": true },
-        { "name": "💥 Crashes Recovered", "value": "\`$TOTAL_CRASHES\`", "inline": true },
-        { "name": "🧩 Google Sign-Ins", "value": "\`$TOTAL_GOOGLE_POPUPS\`", "inline": true },
-        { "name": "📊 Device RAM", "value": "\`${mem_used}MB / ${mem_total}MB\`", "inline": true }
+        { "name": "ðŸ’» HWID", "value": "\`$DEVICE_ID\`", "inline": true },
+        { "name": "â± Script Uptime", "value": "\`${script_hours}h ${script_mins}m\`", "inline": true },
+        { "name": "ðŸ”‹ Device Uptime", "value": "\`${device_uptime}\`", "inline": true },
+        { "name": "ðŸ’¥ Crashes Recovered", "value": "\`$TOTAL_CRASHES\`", "inline": true },
+        { "name": "ðŸ§© Google Sign-Ins", "value": "\`$TOTAL_GOOGLE_POPUPS\`", "inline": true },
+        { "name": "ðŸ“Š Device RAM", "value": "\`${mem_used}MB / ${mem_total}MB\`", "inline": true }
       ],
       "footer": { "text": "REblox Analytics" }
     }
@@ -772,7 +772,7 @@ show_menu() {
             local i=0
             for pkg in $raw_pkgs; do
                 TARGET_PACKAGES+=("$pkg")
-                echo -e "  \e[1;32m[✓]\e[0m \e[1;33m$pkg\e[0m"
+                echo -e "  \e[1;32m[âœ“]\e[0m \e[1;33m$pkg\e[0m"
                 ((i++))
             done
             echo -e "\n\e[32mAll $i packages selected.\e[0m\n"

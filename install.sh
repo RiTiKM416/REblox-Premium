@@ -76,7 +76,7 @@ while kill -0 $CURL_PID 2>/dev/null; do
     sleep 0.1
 done
 
-printf "\r\e[32m[✓] Download complete!       \e[0m\n"
+printf "\r\e[32m[âœ“] Download complete!       \e[0m\n"
 chmod +x "$PREFIX/bin/roblox-reconnector"
 
 echo ""
