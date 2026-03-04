@@ -65,7 +65,7 @@ echo "Downloading core GUI script..."
 
 # Premium Build - Downloading from the Private REblox-Premium repository using the PAT
 GITHUB_TOKEN="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"
-curl -H "Authorization: token $GITHUB_TOKEN" -sL "https://raw.githubusercontent.com/RiTiKM416/REblox-Premium/main/gui_reconnector.sh" -o "$PREFIX/bin/roblox-reconnector" &
+curl -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" -sL "https://api.github.com/repos/RiTiKM416/REblox-Premium/contents/gui_reconnector.sh" -o "$PREFIX/bin/roblox-reconnector" &
 CURL_PID=$!
 
 spin='-\|/'
