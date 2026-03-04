@@ -464,6 +464,7 @@ show_menu() {
     echo -e "${GRAY}==========================================${NORMAL}\n"
     
     read -p "to Select an option : " menu_choice
+    menu_choice="${menu_choice//$'\r'/}"
     
     case $menu_choice in
         1)
