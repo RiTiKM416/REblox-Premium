@@ -84,5 +84,7 @@ echo "Installation complete!"
 echo "Starting the application..."
 echo ""
 
-# Execute the downloaded GUI directly without the pipe constraint
-exec "$PREFIX/bin/roblox-reconnector"
+# Execute the downloaded GUI - reconnect stdin to the real terminal (/dev/tty)
+# This is critical because `curl | bash` consumes stdin via the pipe,
+# so without this, all `read` commands would get empty input.
+exec "$PREFIX/bin/roblox-reconnector" < /dev/tty
